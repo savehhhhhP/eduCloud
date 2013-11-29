@@ -11,5 +11,7 @@
     <string name="string_btnregister">注册</string>
     <string name="title_activity_message">MessageActivity</string>
     <string name="title_activity_file_forder">FileForderActivity</string>
+    <string name="FileActivity_msg_ok">从服务端取文件成功</string>
+    <string name="FileActivity_msg_error">从服务端取文件失败</string>
 
 </resources>

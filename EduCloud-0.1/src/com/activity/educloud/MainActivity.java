@@ -29,7 +29,7 @@ import android.widget.Toast;
 public class MainActivity extends TabActivity {
     final static String TAG = "MainActivity";
 
-	//tabæ 
+	//tabÀ¸
 	private TabHost myTabhost;
 	private ImageButton head,message,tools;
 	private ImageButton upload,download,delete,others;
@@ -46,39 +46,39 @@ public class MainActivity extends TabActivity {
 		Intent intent;
 		myTabhost=this.getTabHost();
 		
-		//ç¬¬ä¸€ä¸ªé€‰é¡¹å¡
-		//è®¾ç½®è¯¥é€‰é¡¹å¡ç‚¹å‡»åæ‰€è·³è½¬çš„activity
+		//µÚÒ»¸öÑ¡Ïî¿¨
+		//ÉèÖÃ¸ÃÑ¡Ïî¿¨µã»÷ºóËùÌø×ªµÄactivity
 		intent=new Intent().setClass(this,FileActivity.class);
 		spec=myTabhost.newTabSpec("one")
-			.setIndicator("åˆ—è¡¨", null)
+			.setIndicator("ÁĞ±í", null)
 			.setContent(intent);
 		myTabhost.addTab(spec);
 		
-		//ç¬¬äºŒä¸ªé€‰é¡¹å¡
-		//è®¾ç½®è¯¥é€‰é¡¹å¡ç‚¹å‡»åæ‰€è·³è½¬çš„activity
+		//µÚ¶ş¸öÑ¡Ïî¿¨
+		//ÉèÖÃ¸ÃÑ¡Ïî¿¨µã»÷ºóËùÌø×ªµÄactivity
 		intent=new Intent().setClass(this,ShareActivity.class);
 		spec=myTabhost.newTabSpec("two")
-			.setIndicator("åˆ†äº«", null)
+			.setIndicator("·ÖÏí", null)
 			.setContent(intent);
 		myTabhost.addTab(spec);
 		
-		//ç¬¬ä¸‰ä¸ªé€‰é¡¹å¡
-		//è®¾ç½®è¯¥é€‰é¡¹å¡ç‚¹å‡»åæ‰€è·³è½¬çš„activity
+		//µÚÈı¸öÑ¡Ïî¿¨
+		//ÉèÖÃ¸ÃÑ¡Ïî¿¨µã»÷ºóËùÌø×ªµÄactivity
 		intent=new Intent().setClass(this,FriendActivity.class);
 		spec=myTabhost.newTabSpec("three")
-			.setIndicator("å¥½å‹", null)
+			.setIndicator("ºÃÓÑ", null)
 			.setContent(intent);
 		myTabhost.addTab(spec);
 		
-		//ç¬¬å››ä¸ªé€‰é¡¹å¡
-		//è®¾ç½®è¯¥é€‰é¡¹å¡ç‚¹å‡»åæ‰€è·³è½¬çš„activity
+		//µÚËÄ¸öÑ¡Ïî¿¨
+		//ÉèÖÃ¸ÃÑ¡Ïî¿¨µã»÷ºóËùÌø×ªµÄactivity
 		intent=new Intent().setClass(this,GroupActivity.class);
 		spec=myTabhost.newTabSpec("four")
-			.setIndicator("ç¾¤ç»„", null)
+			.setIndicator("Èº×é", null)
 			.setContent(intent);
 		myTabhost.addTab(spec);
 		
-		//æ›´æ”¹tabé€‰é¡¹å¡é«˜åº¦
+		//¸ü¸ÄtabÑ¡Ïî¿¨¸ß¶È
 		TabWidget tabwidget=myTabhost.getTabWidget();
 		//Integer tabimage[] = {R.drawable.tab_list,R.drawable.tab_share,R.drawable.tab_friend,
 		//		R.drawable.tab_group};
@@ -207,7 +207,7 @@ public class MainActivity extends TabActivity {
 				intent.setClass(MainActivity.this, FileForderActivity.class); 
 				startActivity(intent);	
 			}catch(Exception e){
-//				Toast.makeText(this, "å¾ˆæŠ±æ­‰ï¼Œä½ æ‰€åœ¨ç½‘ç»œä¸æ˜¯æ•™è‚²ç½‘", Toast.LENGTH_LONG).show();
+//				Toast.makeText(this, "ºÜ±§Ç¸£¬ÄãËùÔÚÍøÂç²»ÊÇ½ÌÓıÍø", Toast.LENGTH_LONG).show();
 			}
 					
 		}
@@ -232,8 +232,8 @@ public class MainActivity extends TabActivity {
 	private View.OnClickListener downloadBtnClickListener = new OnClickListener(){
 	@Override
 	public void onClick(View v) {
-		//æç¤ºæ¡†
-		Toast.makeText(MainActivity.this, "å¾ˆæŠ±æ­‰ï¼Œä½ æ‰€åœ¨ç½‘ç»œä¸æ˜¯æ•™è‚²ç½‘", Toast.LENGTH_LONG).show();
+		//ÌáÊ¾¿ò
+		Toast.makeText(MainActivity.this, "ºÜ±§Ç¸£¬ÄãËùÔÚÍøÂç²»ÊÇ½ÌÓıÍø", Toast.LENGTH_LONG).show();
 	}
 	};
 	
@@ -257,11 +257,11 @@ public class MainActivity extends TabActivity {
 		@Override
 		public void onClick(View v) {			
 //			AlertDialog show = new AlertDialog.Builder(MainActivity.this)
-//			.setTitle("æç¤º")
-//			.setMessage("æŠ±æ­‰~~æ‚¨æ‰€åœ¨ç½‘ç»œä¸æ˜¯æ•™è‚²ç½‘")
-//			.setPositiveButton("ç¡®å®š", null)
+//			.setTitle("ÌáÊ¾")
+//			.setMessage("±§Ç¸~~ÄúËùÔÚÍøÂç²»ÊÇ½ÌÓıÍø")
+//			.setPositiveButton("È·¶¨", null)
 //			.show();
-			Toast.makeText(MainActivity.this, "å¾ˆæŠ±æ­‰ï¼Œä½ æ‰€åœ¨ç½‘ç»œä¸æ˜¯æ•™è‚²ç½‘", Toast.LENGTH_LONG).show();
+			Toast.makeText(MainActivity.this, "ºÜ±§Ç¸£¬ÄãËùÔÚÍøÂç²»ÊÇ½ÌÓıÍø", Toast.LENGTH_LONG).show();
 		}
 		};
 		
@@ -284,7 +284,7 @@ public class MainActivity extends TabActivity {
 		private View.OnClickListener othersBtnClickListener = new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(MainActivity.this, "å¾ˆæŠ±æ­‰ï¼Œä½ æ‰€åœ¨ç½‘ç»œä¸æ˜¯æ•™è‚²ç½‘", Toast.LENGTH_LONG).show();
+				Toast.makeText(MainActivity.this, "ºÜ±§Ç¸£¬ÄãËùÔÚÍøÂç²»ÊÇ½ÌÓıÍø", Toast.LENGTH_LONG).show();
 				
 			}
 			};
@@ -311,7 +311,7 @@ public class MainActivity extends TabActivity {
 				if(exitnum == 0)
 				{
 					exitnum++;
-					Toast.makeText(MainActivity.this, "å†æŒ‰ä¸€æ¬¡é€€å‡ºåº”ç”¨", Toast.LENGTH_LONG).show();
+					Toast.makeText(MainActivity.this, "ÔÙ°´Ò»´ÎÍË³öÓ¦ÓÃ", Toast.LENGTH_LONG).show();
 					return;
 				}
 				else if(exitnum == 1)

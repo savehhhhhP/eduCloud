@@ -28,7 +28,7 @@ public class WelcomeActivity extends Activity {
 		timer.schedule(tast,3000);
 	}
 
-	//æŒ‰è¿”å›é”®ç›´æ¥é€€å‡º
+	//°´·µ»Ø¼üÖ±½ÓÍË³ö
 	@Override
 	public void finish() {
 		// TODO Auto-generated method stub

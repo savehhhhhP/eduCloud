@@ -4,12 +4,12 @@ package com.file.educloud;
  * Created with IntelliJ IDEA.
  * User: save
  * Date: 13-11-16
- * Time: ä¸‹åˆ3:46
+ * Time: ÏÂÎç3:46
  * To change this template use File | Settings | File Templates.
  */
 public class fileFactory {
     /**
-     * å·¥åœºæ–¹æ³• åˆ›å»ºç©ºæ–‡ä»¶
+     * ¹¤³¡·½·¨ ´´½¨¿ÕÎÄ¼ş
      * @return
      */
     static public File createNewNullFile(){

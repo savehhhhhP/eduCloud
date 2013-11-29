@@ -7,17 +7,18 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.BaseAdapter;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 import com.file.educloud.File;
 import com.file.educloud.fileFactory;
+import com.utill.educloud.Contents;
+import com.utill.educloud.DataServer;
 
 public class FileActivity extends Activity {
     static final String TAG ="FileActivity";
@@ -25,18 +26,22 @@ public class FileActivity extends Activity {
 	private ListView mListView;
     private FileListAdapter filelistadapter;
     private List<File> files;
-    private String rootUuid;                     //ç”¨æˆ·æ ¹ç›®å½• uuid
-    private String curUuid;                       //ç”¨æˆ·å½“å‰ç›®å½• uuid
+    private String rootUuid;                     //ÓÃ»§¸ùÄ¿Â¼ uuid
+    private String curUuid;                       //ÓÃ»§µ±Ç°Ä¿Â¼ uuid
     private FileActivity act;
+
+    MyHandler myHandler;
     /**
-     * åˆå§‹åŒ–æ–‡ä»¶æ•°æ®
+     * ³õÊ¼»¯ÎÄ¼şÊı¾İ
      */
     private void initFileData() {
+
+        getFileData();
         act = this;
         rootUuid = "root";
         curUuid = rootUuid;
         List<File> files = new ArrayList<File>();
-        //æµ‹è¯•æ¨¡æ‹Ÿæ–‡ä»¶
+        //²âÊÔÄ£ÄâÎÄ¼ş
         int i = 0;
         for (i = 0; i < 6; i++) {
             File f = new File("", 0, i + "", R.drawable.documnet, R.drawable.not_selected, "u1");
@@ -44,22 +49,28 @@ public class FileActivity extends Activity {
             Log.i(TAG, f.toString());
         }
         this.files = files;
+
     }
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_file);
 
-
-        initFileData();   //åˆå§‹åŒ–æ•°æ®
+        init();
+        initFileData();   //³õÊ¼»¯Êı¾İ
         initUI();
 	}
 
+    private void init() {
+        myHandler = new MyHandler();
+    }
+
     private void initUI() {
         mListView = (ListView) findViewById(R.id.ltv_file);
-        filelistadapter = new FileListAdapter(this, files); //åˆ›å»ºé€‚é…å™¨
-        mListView.setAdapter(filelistadapter);
+        filelistadapter = new FileListAdapter(this, files); //´´½¨ÊÊÅäÆ÷
+
     }
 
     class FileListAdapter extends BaseAdapter {
@@ -90,7 +101,7 @@ public class FileActivity extends Activity {
             final TextView indexText;
             final ImageButton indexButton;
             if (convertView == null) {  
-                // å’Œitem_custom.xmlè„šæœ¬å…³è”  
+                // ºÍitem_custom.xml½Å±¾¹ØÁª  
                 convertView = mInflater.inflate(R.layout.listview_fileitem, null);  
             }  
             indexImage = (ImageView) convertView.findViewById(R.id.imv_filetype);  
@@ -107,7 +118,7 @@ public class FileActivity extends Activity {
                 public void onClick(View v) {
                     Log.i(TAG,mlistItems.get(position).toString());
                     File f = mlistItems.get(position);
-                    if(f.getType()==0){                     //å¦‚æœç‚¹å‡»äº†ç›®å½• åˆ™è¿›å…¥ç›®å½•    é¦–ä¸ªç›®å½•ä¸ºè¿”å›
+                    if(f.getType()==0){                     //Èç¹ûµã»÷ÁËÄ¿Â¼ Ôò½øÈëÄ¿Â¼    Ê×¸öÄ¿Â¼Îª·µ»Ø
 
                         goinCategroy(f);
                     }
@@ -118,10 +129,10 @@ public class FileActivity extends Activity {
 				public void onClick(View arg0) {
 					// TODO Auto-generated method stub
 					new AlertDialog.Builder(FileActivity.this)
-					.setTitle("æ–‡ä»¶é€‰é¡¹")
-	                .setMultiChoiceItems(new String[] {"åˆ é™¤","å…±äº«","é‡å‘½å"}, null, null)
-	                .setPositiveButton("ç¡®å®š", null)
-	                .setNegativeButton("å–æ¶ˆ", null)
+					.setTitle("ÎÄ¼şÑ¡Ïî")
+	                .setMultiChoiceItems(new String[] {"É¾³ı","¹²Ïí","ÖØÃüÃû"}, null, null)
+	                .setPositiveButton("È·¶¨", null)
+	                .setNegativeButton("È¡Ïû", null)
 	                .show();
 				}
             	
@@ -149,14 +160,14 @@ public class FileActivity extends Activity {
 
     private void goinCategroy(File fl) {
         files.clear();
-        if(fl.getUuid()!=rootUuid){      //å¦‚æœç‚¹å‡»çš„ä¸ä¸ºæ ¹ç›®å½•åˆ™æ·»åŠ è¿”å›æ–‡ä»¶å¤¹
-            files.add(new File(curUuid, 0, "è¿”å›ä¸Šçº§...", R.drawable.documnet, R.drawable.not_selected, "u1"));
+        if(fl.getUuid()!=rootUuid){      //Èç¹ûµã»÷µÄ²»Îª¸ùÄ¿Â¼ÔòÌí¼Ó·µ»ØÎÄ¼ş¼Ğ
+            files.add(new File(curUuid, 0, "·µ»ØÉÏ¼¶...", R.drawable.documnet, R.drawable.not_selected, "u1"));
         }
         curUuid = fl.getUuid();
-        //æ­¤å¤„éœ€è¦å‘é€è¯·æ±‚ æŸ¥è¯¢è¿›å…¥ ç›®å½•ä¸‹çš„æ‰€æœ‰æ–‡ä»¶ä¿¡æ¯
+        //´Ë´¦ĞèÒª·¢ËÍÇëÇó ²éÑ¯½øÈë Ä¿Â¼ÏÂµÄËùÓĞÎÄ¼şĞÅÏ¢
 
 
-        //æµ‹è¯•æ¨¡æ‹Ÿæ–‡ä»¶
+        //²âÊÔÄ£ÄâÎÄ¼ş
         int i = 0;
         for (i = 0; i < 3; i++) {
             File f = new File(i+"", 0, i + "tttt", R.drawable.documnet, R.drawable.not_selected, "u1");
@@ -164,8 +175,74 @@ public class FileActivity extends Activity {
             Log.i(TAG, f.toString());
         }
         mListView = (ListView) findViewById(R.id.ltv_file);
-        filelistadapter = new FileListAdapter(this, files); //åˆ›å»ºé€‚é…å™¨
+        filelistadapter = new FileListAdapter(this, files); //´´½¨ÊÊÅäÆ÷
         mListView.setAdapter(filelistadapter);
     }
 
+    /**
+     * È¡µÃ·şÎñÆ÷ÎÄ¼şÊı¾İ
+     */
+    private void getFileData() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    String mainifestData;
+                    mainifestData = DataServer.getJsonString(Contents.getFileUrl);    //»ñµÃmainfestÊı¾İ
+                    Log.i(TAG,"get mainfest");
+                    Map<String,String> mapMain = DataServer.getMainifest(mainifestData);     //½âÎömainfestÊı¾İ
+                    int i=0,length=0;
+                    length=Integer.parseInt(mapMain.get("length"));                                      //»ñÈ¡ÎÄ¼ş×ÊÔ´µÄ¸öÊı
+                    Log.i(TAG,""+length);
+//                    for(;i<length;i++){
+//                        String fileKey = "id_"+i;
+//                        DataSyn.getResourceString(Constants.GET_FILE_PATH+mapMain.get(fileKey),myDbHelper.getFilename(mapMain.get(fileKey)),Constants.dir_path_pic);
+//                    }
+//                    Log.i(TAG,"get file");
+
+                    Message msg = new Message();
+                    Bundle b = new Bundle();//´æ·ÅÊı¾İ
+                    b.putString("msg", getString(R.string.FileActivity_msg_ok));
+                    msg.setData(b);
+                    FileActivity.this.myHandler.sendMessage(msg);
+                }catch(Exception e){
+                    Log.i("syn1",e.toString()  + "error");
+                    Message msg = new Message();
+                    Bundle b = new Bundle();//´æ·ÅÊı¾İ
+                    b.putString("msg", getString(R.string.FileActivity_msg_error));
+                    msg.setData(b);
+                    FileActivity.this.myHandler.sendMessage(msg);
+                }
+            }
+        }).start();
+    }
+
+    class MyHandler extends Handler {
+
+        public MyHandler() {
+
+        }
+        public MyHandler(Looper L) {
+            super(L);
+        }
+
+        //×ÓÀà±ØĞëÖØĞ´´Ë·½·¨,½ÓÊÜÊı¾İ
+
+        @Override
+
+        public void handleMessage(Message msg) {
+
+            // TODO Auto-generated method stub
+            super.handleMessage(msg);
+
+            //´Ë´¦¿ÉÒÔ¸üĞÂUI
+
+            Bundle b = msg.getData();
+
+            String error = b.getString("msg");
+            mListView.setAdapter(filelistadapter);
+            Toast.makeText(FileActivity.this, error, Toast.LENGTH_LONG).show();
+        }
+
+    }
 }

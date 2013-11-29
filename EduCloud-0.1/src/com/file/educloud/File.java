@@ -4,16 +4,16 @@ package com.file.educloud;
  * Created with IntelliJ IDEA.
  * User: save
  * Date: 13-11-16
- * Time: ä¸‹åˆ3:29
+ * Time: ÏÂÎç3:29
  * To change this template use File | Settings | File Templates.
  */
 public class File {
-    String uuid;                //æ–‡ä»¶uuid      ï¼ˆå”¯ä¸€æ ‡è¯†ï¼‰
-    int type;                   //ç±»å‹
-    String name;                //æ–‡ä»¶å
-    int imgId;               //æ–‡ä»¶å›¾åƒid
-    int btnImgId;            //æŒ‰é’®æ ·å¼id
-    String user;                //æ‰€å±ç”¨æˆ·
+    String uuid;                //ÎÄ¼şuuid      £¨Î¨Ò»±êÊ¶£©
+    int type;                   //ÀàĞÍ
+    String name;                //ÎÄ¼şÃû
+    int imgId;               //ÎÄ¼şÍ¼Ïñid
+    int btnImgId;            //°´Å¥ÑùÊ½id
+    String user;                //ËùÊôÓÃ»§
 
 
     public File(String uuid, int type, String name, int imgId,int btnImgId, String user) {
