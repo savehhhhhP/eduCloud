@@ -1,11 +1,10 @@
 package com.activity.educloud;
 
 import java.util.*;
-
+import java.io.*;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -16,8 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.*;
 import com.file.educloud.File;
-import com.file.educloud.fileFactory;
-import com.utill.educloud.Contents;
+import com.utill.educloud.Constants;
 import com.utill.educloud.DataServer;
 
 public class FileActivity extends Activity {
@@ -40,16 +38,6 @@ public class FileActivity extends Activity {
         act = this;
         rootUuid = "root";
         curUuid = rootUuid;
-        List<File> files = new ArrayList<File>();
-        //测试模拟文件
-        int i = 0;
-        for (i = 0; i < 6; i++) {
-            File f = new File("", 0, i + "", R.drawable.documnet, R.drawable.not_selected, "u1");
-            files.add(f);
-            Log.i(TAG, f.toString());
-        }
-        this.files = files;
-
     }
 
 	@Override
@@ -69,7 +57,6 @@ public class FileActivity extends Activity {
 
     private void initUI() {
         mListView = (ListView) findViewById(R.id.ltv_file);
-        filelistadapter = new FileListAdapter(this, files); //创建适配器
 
     }
 
@@ -93,68 +80,90 @@ public class FileActivity extends Activity {
         }  
         public int getCount() {  
             // TODO Auto-generated method stub  
-            return mlistItems.size();  
-        }  
+            return mlistItems.size();
+        }
+
         public View getView(final int position, View convertView,
-                android.view.ViewGroup parent) {  
-            final ImageView indexImage;  
+                            android.view.ViewGroup parent) {
+            final ImageView indexImage;
             final TextView indexText;
             final ImageButton indexButton;
-            if (convertView == null) {  
+            if (convertView == null) {
                 // 和item_custom.xml脚本关联  
-                convertView = mInflater.inflate(R.layout.listview_fileitem, null);  
-            }  
-            indexImage = (ImageView) convertView.findViewById(R.id.imv_filetype);  
-            indexText = (TextView) convertView.findViewById(R.id.tv_filename); 
-            indexButton = (ImageButton)convertView.findViewById(R.id.imbtn_select); 
-            
+                convertView = mInflater.inflate(R.layout.listview_fileitem, null);
+            }
+            indexImage = (ImageView) convertView.findViewById(R.id.imv_filetype);
+            indexText = (TextView) convertView.findViewById(R.id.tv_filename);
+            indexButton = (ImageButton) convertView.findViewById(R.id.imbtn_select);
+
             indexText.setText(mlistItems.get(position).getName());
             //indexText.setTextColor(Color.RED);    
             indexImage.setBackgroundResource(mlistItems.get(position).getImgId());
             indexButton.setBackgroundResource(mlistItems.get(position).getBtnImgId());
 
-            indexImage.setOnClickListener(new View.OnClickListener(){
+            indexImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.i(TAG,mlistItems.get(position).toString());
+                    Log.i(TAG, mlistItems.get(position).toString());
                     File f = mlistItems.get(position);
-                    if(f.getType()==0){                     //如果点击了目录 则进入目录    首个目录为返回
-
+                    if (f.getType() == 0) {                     //如果点击了目录 则进入目录    首个目录为返回
                         goinCategroy(f);
+                    }
+                    else if(f.getType() == 1){
+                        //下载文件
+                        downloadFile(f);
                     }
                 }
             });
-            indexButton.setOnClickListener(new View.OnClickListener(){
-				@Override
-				public void onClick(View arg0) {
-					// TODO Auto-generated method stub
-					new AlertDialog.Builder(FileActivity.this)
-					.setTitle("文件选项")
-	                .setMultiChoiceItems(new String[] {"删除","共享","重命名"}, null, null)
-	                .setPositiveButton("确定", null)
-	                .setNegativeButton("取消", null)
-	                .show();
-				}
-            	
-            });
-            
-            indexButton.setOnTouchListener(new View.OnTouchListener(){
+            indexButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View arg0) {
+                    // TODO Auto-generated method stub
+                    new AlertDialog.Builder(FileActivity.this)
+                            .setTitle("文件选项")
+                            .setMultiChoiceItems(new String[]{"删除", "共享", "重命名"}, null, null)
+                            .setPositiveButton("确定", null)
+                            .setNegativeButton("取消", null)
+                            .show();
+                }
 
-				@Override
-				public boolean onTouch(View v, MotionEvent event) {
-					// TODO Auto-generated method stub
-					if(event.getAction() == MotionEvent.ACTION_DOWN){
-						indexButton.setBackgroundResource(R.drawable.selected);
-					}
-					else if(event.getAction() == MotionEvent.ACTION_UP){
-						indexButton.setBackgroundResource(R.drawable.not_selected);
-					}
-					return false;
-				}
-            	
             });
-            return convertView;  
-        }  
+
+            indexButton.setOnTouchListener(new View.OnTouchListener() {
+
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    // TODO Auto-generated method stub
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        indexButton.setBackgroundResource(R.drawable.selected);
+                    } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                        indexButton.setBackgroundResource(R.drawable.not_selected);
+                    }
+                    return false;
+                }
+
+            });
+            return convertView;
+        }
+    }
+
+    private void downloadFile(final File file) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    java.io.File dir_downland = new java.io.File(Constants.dir_path_downland);
+                    if (!dir_downland.exists()) {
+                        dir_downland.mkdirs();
+                    }
+                    Log.i(TAG, "路径初始化成功");
+                    DataServer.getResourceString(Constants.GET_FILE_PATH + file.getName(), file.getName()+".png", Constants.dir_path_downland);
+                } catch (Exception e) {
+                    Log.e(TAG, e.toString());
+                }
+            }
+
+        }).start();
     }
 
 
@@ -188,7 +197,7 @@ public class FileActivity extends Activity {
             public void run() {
                 try{
                     String mainifestData;
-                    mainifestData = DataServer.getJsonString(Contents.getFileUrl);    //获得mainfest数据
+                    mainifestData = DataServer.getJsonString(Constants.getFileUrl);    //获得mainfest数据
                     Log.i(TAG,"get mainfest");
                     Map<String,String> mapMain = DataServer.getMainifest(mainifestData);     //解析mainfest数据
                     int i=0,length=0;
@@ -202,6 +211,14 @@ public class FileActivity extends Activity {
 
                     Message msg = new Message();
                     Bundle b = new Bundle();//存放数据
+                    String []files = new String[8];
+                    for(int j =0;j<8;j++){
+                        String fileKey = "id_"+j;
+                        files[j] = mapMain.get(fileKey);
+                        Log.i("syn1",files[j]);
+                    }
+
+                    b.putStringArray("files",files);
                     b.putString("msg", getString(R.string.FileActivity_msg_ok));
                     msg.setData(b);
                     FileActivity.this.myHandler.sendMessage(msg);
@@ -235,11 +252,22 @@ public class FileActivity extends Activity {
             // TODO Auto-generated method stub
             super.handleMessage(msg);
 
+
+
             //此处可以更新UI
 
             Bundle b = msg.getData();
-
             String error = b.getString("msg");
+            String []fils = b.getStringArray("files");
+
+            List<File> files = new ArrayList<File>();
+            //测试模拟文件
+            int i = 0;
+            for (i = 0; i < fils.length; i++) {
+                File f = new File("", 1, fils[i], R.drawable.other, R.drawable.not_selected, "u1");
+                files.add(f);
+            }
+            filelistadapter = new FileListAdapter(act, files); //创建适配器
             mListView.setAdapter(filelistadapter);
             Toast.makeText(FileActivity.this, error, Toast.LENGTH_LONG).show();
         }
